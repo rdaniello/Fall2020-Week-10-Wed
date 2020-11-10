@@ -1,12 +1,68 @@
 <!DOCTYPE html>
+<!--
+do you need cute sliders? https://refreshless.com/nouislider/
+In <head>
+<link href="nouislider.min.css" rel="stylesheet">
+----------------------------------------------------------------
+In <body>
+<script src="nouislider.min.js"></script>
+var slider = document.getElementById('slider');
+----------------------------------------------------------------
+in JS
+noUiSlider.create(slider, {
+    start: [20, 80],
+    connect: true,
+    range: {
+        'min': 0,
+        'max': 100
+    }
+});
+-->
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Scatter plot with Sliders</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="js/scatter_plot_withSlider.js?22000"></script>
+    <script src="js/random_data_generator.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <style>
 
-    <title>Exercise 01</title>
+        svg{
+            width: 30vw;
+            height: 30vw;
+
+        }
+
+        input
+        {
+            margin-left: 2vw;
+            width: 25vw;
+        }
+
+    </style>
 </head>
 <body>
+<svg id="scatter_plot" viewBox="0 0 1000 1000">
+</svg>
+<br>
+<input type="range" value="100" min="10" max="100" id="sliderX">
+<script>
 
+    let data_points = d3.map(d3.range(0,90,.05),function (d){return {x:d,y:Math.sin(d),r:4,c:d3.rgb(33,d+100,d) }})
+
+
+    scatter_plot(data=data_points,ax="#scatter_plot",
+        title="Random Data",
+        xLabel="X Axis",
+        yLabel="Y Axis")
+    d3.select("#sliderX").on("input", function() {
+        let value = +this.value; // get the value of the slider
+        let filtered_data = d3.filter(data_points,function(d){return d.r=value})
+        scatter_plot_update(d3.map(d3.range(0,90,.05),function (d){return {x:d,y:Math.sin(d),r:value,c:d3.rgb(33,d+100,d) }}))
+    });
+
+</script>
 </body>
 </html>
